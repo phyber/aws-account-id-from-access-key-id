@@ -1,22 +1,63 @@
 //
-use data_encoding::BASE32;
+use std::fmt;
+use std::str::FromStr;
+
+mod account_id;
+mod error;
+mod key_type;
+
+use account_id::AccountId;
+use error::AccessKeyError;
+use key_type::KeyType;
 
 const ACCESS_KEY_ID: &str = "ASIAY34FZKBOKMUTVV7A";
-const MASK: u64 = 0x7fff_ffff_ff80;
 
-fn account_id_from_access_key_id(access_key_id: &str) -> Result<u64, Box<dyn std::error::Error>> {
-    let decoded = BASE32.decode(access_key_id[4..].as_bytes())?;
-    let mut buf = [0; 8];
-
-    buf[2..].copy_from_slice(&decoded[0..6]);
-
-    Ok((u64::from_be_bytes(buf) & MASK) >> 7)
+#[derive(Debug)]
+struct AccessKeyInfo {
+    account_id: AccountId,
+    key_type: KeyType,
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let account_id = account_id_from_access_key_id(ACCESS_KEY_ID)?;
+impl fmt::Display for AccessKeyInfo {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "AccountID: {}, Key Desc: {}",
+            self.account_id,
+            self.key_type.description(),
+        )
+    }
+}
 
-    println!("Account ID: {account_id:012}");
+impl FromStr for AccessKeyInfo {
+    type Err = AccessKeyError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.len() != 20 {
+            return Err(AccessKeyError::InvalidLength);
+        }
+
+        let account_id = AccountId::from_str(s)?;
+        let key_type = KeyType::from_str(s)?;
+
+        let access_key_info = Self {
+            account_id,
+            key_type,
+        };
+
+        Ok(access_key_info)
+    }
+}
+
+fn main() -> Result<(), AccessKeyError> {
+    let access_key_info = AccessKeyInfo::from_str(ACCESS_KEY_ID)?;
+
+    println!("{access_key_info}");
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
 }

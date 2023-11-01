@@ -4,6 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-
-[dependencies.data-encoding]
-version = "2.4.0"
+data-encoding = "2.4.0"
+thiserror = "1.0"
