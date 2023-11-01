@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "aws-account-id-from-access-key-id"
+name = "aws-access-key-info"
 version = "0.1.0"
 dependencies = [
  "data-encoding",

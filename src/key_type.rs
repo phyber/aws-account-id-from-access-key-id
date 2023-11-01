@@ -20,6 +20,7 @@ pub enum KeyType {
 }
 
 impl KeyType {
+    #[must_use]
     pub fn description(&self) -> &str {
         match self {
             Self::Abia => "ABIA (AWS STS service bearer token)",
