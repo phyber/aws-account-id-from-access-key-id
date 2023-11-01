@@ -1,0 +1,9 @@
+[package]
+name = "aws-account-id-from-access-key-id"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[dependencies.data-encoding]
+version = "2.4.0"
