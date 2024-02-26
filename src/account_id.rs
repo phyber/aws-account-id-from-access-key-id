@@ -6,9 +6,16 @@ use std::str::FromStr;
 
 const MASK: u64 = 0x7fff_ffff_ff80;
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct AccountId {
     id: u64,
+}
+
+impl AccountId {
+    #[must_use]
+    pub fn id(&self) -> u64 {
+        self.id
+    }
 }
 
 impl fmt::Display for AccountId {
@@ -23,11 +30,11 @@ impl FromStr for AccountId {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let decoded = BASE32.decode(s[4..].as_bytes())?;
         let mut buf = [0; 8];
-
         buf[2..].copy_from_slice(&decoded[0..6]);
+        let id = (u64::from_be_bytes(buf) & MASK) >> 7;
 
         let account_id = Self {
-            id: (u64::from_be_bytes(buf) & MASK) >> 7,
+            id,
         };
 
         Ok(account_id)

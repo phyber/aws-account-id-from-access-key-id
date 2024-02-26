@@ -5,36 +5,36 @@ use std::str::FromStr;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum KeyType {
-    Abia,
-    Acca,
-    Agpa,
-    Aida,
-    Aipa,
-    Akia,
-    Anpa,
-    Anva,
-    Apka,
-    Aroa,
-    Asca,
-    Asia,
+    ABIA,
+    ACCA,
+    AGPA,
+    AIDA,
+    AIPA,
+    AKIA,
+    ANPA,
+    ANVA,
+    APKA,
+    AROA,
+    ASCA,
+    ASIA,
 }
 
 impl KeyType {
     #[must_use]
     pub fn description(&self) -> &str {
         match self {
-            Self::Abia => "ABIA (AWS STS service bearer token)",
-            Self::Acca => "ACCA (Context-specific credential)",
-            Self::Agpa => "AGPA (Group)",
-            Self::Aida => "AIDA (IAM user)",
-            Self::Aipa => "AIPA (Amazon EC2 instance profile)",
-            Self::Akia => "AKIA (Access key)",
-            Self::Anpa => "ANPA (Managed policy)",
-            Self::Anva => "ANVA (Version in a managed policy)",
-            Self::Apka => "APKA (Public key)",
-            Self::Aroa => "AROA (Role)",
-            Self::Asca => "ASCA (Certificate)",
-            Self::Asia => "ASIA (Temporary (AWS STS) keys)",
+            Self::ABIA => "ABIA (AWS STS service bearer token)",
+            Self::ACCA => "ACCA (Context-specific credential)",
+            Self::AGPA => "AGPA (Group)",
+            Self::AIDA => "AIDA (IAM user)",
+            Self::AIPA => "AIPA (Amazon EC2 instance profile)",
+            Self::AKIA => "AKIA (Access key)",
+            Self::ANPA => "ANPA (Managed policy)",
+            Self::ANVA => "ANVA (Version in a managed policy)",
+            Self::APKA => "APKA (Public key)",
+            Self::AROA => "AROA (Role)",
+            Self::ASCA => "ASCA (Certificate)",
+            Self::ASIA => "ASIA (Temporary (AWS STS) keys)",
         }
     }
 }
@@ -42,18 +42,18 @@ impl KeyType {
 impl fmt::Display for KeyType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let output = match self {
-            Self::Abia => "ABIA",
-            Self::Acca => "ACCA",
-            Self::Agpa => "AGPA",
-            Self::Aida => "AIDA",
-            Self::Aipa => "AIPA",
-            Self::Akia => "AKIA",
-            Self::Anpa => "ANPA",
-            Self::Anva => "ANVA",
-            Self::Apka => "APKA",
-            Self::Aroa => "AROA",
-            Self::Asca => "ASCA",
-            Self::Asia => "ASIA",
+            Self::ABIA => "ABIA",
+            Self::ACCA => "ACCA",
+            Self::AGPA => "AGPA",
+            Self::AIDA => "AIDA",
+            Self::AIPA => "AIPA",
+            Self::AKIA => "AKIA",
+            Self::ANPA => "ANPA",
+            Self::ANVA => "ANVA",
+            Self::APKA => "APKA",
+            Self::AROA => "AROA",
+            Self::ASCA => "ASCA",
+            Self::ASIA => "ASIA",
         };
 
         write!(f, "{output}")
@@ -64,23 +64,21 @@ impl FromStr for KeyType {
     type Err = AccessKeyError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let key_type = match &s[..4] {
-            "ABIA"  => Self::Abia,
-            "ACCA"  => Self::Acca,
-            "AGPA"  => Self::Agpa,
-            "AIDA"  => Self::Aida,
-            "AIPA"  => Self::Aipa,
-            "AKIA"  => Self::Akia,
-            "ANPA"  => Self::Anpa,
-            "ANVA"  => Self::Anva,
-            "APKA"  => Self::Apka,
-            "AROA"  => Self::Aroa,
-            "ASCA"  => Self::Asca,
-            "ASIA"  => Self::Asia,
-            unknown => Err(AccessKeyError::UnknownPrefix(unknown.to_string()))?,
-        };
-
-        Ok(key_type)
+        match &s[..4] {
+            "ABIA"  => Ok(Self::ABIA),
+            "ACCA"  => Ok(Self::ACCA),
+            "AGPA"  => Ok(Self::AGPA),
+            "AIDA"  => Ok(Self::AIDA),
+            "AIPA"  => Ok(Self::AIPA),
+            "AKIA"  => Ok(Self::AKIA),
+            "ANPA"  => Ok(Self::ANPA),
+            "ANVA"  => Ok(Self::ANVA),
+            "APKA"  => Ok(Self::APKA),
+            "AROA"  => Ok(Self::AROA),
+            "ASCA"  => Ok(Self::ASCA),
+            "ASIA"  => Ok(Self::ASIA),
+            unknown => Err(AccessKeyError::UnknownPrefix(unknown.to_string())),
+        }
     }
 }
 
@@ -93,11 +91,11 @@ mod tests {
         let tests = vec![
             (
                 "ASIA1234567890ABCDEF",
-                Ok(KeyType::Asia),
+                Ok(KeyType::ASIA),
             ),
             (
-                "KEKW1234567890ABCDEF",
-                Err(AccessKeyError::UnknownPrefix(String::from("KEKW"))),
+                "WHAT1234567890ABCDEF",
+                Err(AccessKeyError::UnknownPrefix(String::from("WHAT"))),
             ),
         ];
 
