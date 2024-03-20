@@ -8,10 +8,10 @@ pub enum AccessKeyError {
     Base32DecodeError(#[from] data_encoding::DecodeError),
 
     /// Returned if the access key has an invalid length.
-    #[error("invalid key length")]
+    #[error("invalid key length, account ids should be 20 characters")]
     InvalidLength,
 
     /// Returned if the prefix of the access key is unknown.
-    #[error("unknown key prefix: {0}")]
+    #[error("unknown account id prefix: {0}")]
     UnknownPrefix(String),
 }
